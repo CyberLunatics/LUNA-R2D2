@@ -25,7 +25,8 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
 ### Install more
 RUN apt update && printf "yes\n" | apt install -y k4a-tools && \
     apt install -y \
-    libk4a1.4-dev
+    libk4a1.4-dev \
+    build-essentials
 
 ### Copy source code to container
 ####COPY src /home/payload/workspace/src
