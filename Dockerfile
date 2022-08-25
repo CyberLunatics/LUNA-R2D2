@@ -35,7 +35,8 @@ COPY src /home/payload/workspace/src
 ####RUN chmod +x /home/payload/workspace/scripts/*.sh
 
 ### build payload software (if building is required)
-RUN gcc -g -Wall  /home/payload/workspace/src/check-device.cpp -o /usr/local/bin/check-device -lk4a
+RUN gcc -g -Wall  /home/payload/workspace/src/check-device.cpp -o /usr/local/bin/check-device -lk4a \
+    gcc -g -Wall  /home/payload/workspace/src/capture-stream.c -o /usr/local/bin/capture-stream -lk4a
 
 # https://gist.github.com/madelinegannon/c212dbf24fc42c1f36776342754d81bc#installing-sensor-sdk-on-jetson-xavier-nx
 #
