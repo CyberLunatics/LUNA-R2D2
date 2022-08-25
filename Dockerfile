@@ -26,15 +26,17 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
 RUN apt update && printf "yes\n" | apt install -y k4a-tools && \
     apt install -y \
     libk4a1.4-dev \
-    build-essentials
+    build-essential
 
 ### Copy source code to container
-####COPY src /home/payload/workspace/src
+COPY src /home/payload/workspace/src
 ## COPY include /home/payload/workspace/include
 ####COPY scripts /home/payload/workspace/scripts
 ####RUN chmod +x /home/payload/workspace/scripts/*.sh
 
 ### build payload software (if building is required)
+RUN gcc -g -Wall  /home/payload/workspace/src/check-device.cpp -o /usr/local/bin/check-device -lk4a
+
 # https://gist.github.com/madelinegannon/c212dbf24fc42c1f36776342754d81bc#installing-sensor-sdk-on-jetson-xavier-nx
 #
 # RUN mkdir -p /home/payload/workspace/build &&\
