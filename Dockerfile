@@ -8,7 +8,8 @@
 
 
 ### Base image for your container
-FROM ubuntu:18.04
+#FROM ubuntu:18.04
+FROM nvidia/cuda:11.7.0-devel-ubuntu18.04
 
 
 ### Install required packages/dependencies
@@ -23,7 +24,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     apt-add-repository https://packages.microsoft.com/ubuntu/18.04/multiarch/prod
 
 ### Install more
-RUN apt update && printf "yes\n" | apt install -y k4a-tools && \
+RUN apt update && ACCEPT_EULA=y apt install -y k4a-tools && \
     apt install -y \
     libk4a1.4-dev \
     build-essential
