@@ -9,7 +9,7 @@
 
 ### Base image for your container
 #FROM ubuntu:18.04
-FROM nvidia/cuda:11.7.0-devel-ubuntu18.04
+FROM nvidia/cuda:11.7.0-base-ubuntu18.04
 
 
 ### Install required packages/dependencies
