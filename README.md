@@ -1,4 +1,15 @@
+###  Kinect a la Luna
+###### build docker image
 ```
-nemo@omen:~/azure-kinect-lo$ docker run -it --rm --name dd3 --privileged -v /dev/bus/usb:/dev/bus/usb dd3 check-device
-Opened device: 000071692212
+sudo docker build -t kinect/luna
 ```
+###### run docker container
+```
+sudo chmod +x /scripts/run.sh
+sudo ./run.sh [option] image_name
+```
+###### configuration on host machine:
+```
+xhost +local:docker
+```
+
