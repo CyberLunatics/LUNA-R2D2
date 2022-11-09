@@ -35,7 +35,7 @@ COPY src /home/payload/workspace/src
 ### build payload software (if building is required)
 RUN gcc -g -Wall  /home/payload/workspace/src/check-device.cpp -o /usr/local/bin/check-device -lk4a -lstdc++; \
     gcc -g -Wall  /home/payload/workspace/src/capture-stream.c -o /usr/local/bin/capture-stream -lk4a; \
-    gcc -g Wall /home/payload/workspace/src/capture-disk.c -o /usr/local/bin/capture-disk -lk4a
+    gcc -g -Wall /home/payload/workspace/src/capture-disk.c -o /usr/local/bin/capture-disk -lk4a
 
 # Dependencies for glvnd and X11.
 RUN apt-get update \
