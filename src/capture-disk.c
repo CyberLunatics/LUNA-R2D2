@@ -77,7 +77,7 @@ int main(int argc, char **argv)
                    k4a_image_get_stride_bytes(image));
                    uint8_t* buffer = k4a_image_get_buffer( image );
                    int size = k4a_image_get_height_pixels(image) * k4a_image_get_stride_bytes(image);
-                   FILE* pFile; pFile = fopen("color_data","wb");
+                   FILE* pFile; pFile = fopen("/storage/color_data","wb");
                    if (pFile){
                         fwrite(buffer, size, 1, pFile);
 
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
                    k4a_image_get_stride_bytes(image));
                    uint8_t* buffer = k4a_image_get_buffer( image );
                    int size = k4a_image_get_height_pixels(image) * k4a_image_get_stride_bytes(image);
-                   FILE* pFile; pFile = fopen("ir_data","wb");
+                   FILE* pFile; pFile = fopen("/storage/ir_data","wb");
                    if (pFile){
                         fwrite(buffer, size, 1, pFile);
                     }
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
                    k4a_image_get_stride_bytes(image));
                    uint8_t* buffer = k4a_image_get_buffer( image );
                    int size = k4a_image_get_height_pixels(image) * k4a_image_get_stride_bytes(image);
-                   FILE* pFile; pFile = fopen("depth_data","wb");
+                   FILE* pFile; pFile = fopen("/storage/depth_data","wb");
                    if (pFile){
                         fwrite(buffer, size, 1, pFile);
                     }

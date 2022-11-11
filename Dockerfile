@@ -3,7 +3,7 @@
 ### docker build -t payload_image <path_to_folder_containing_Dockerfile>
 ###
 ### To Run:
-### ./scripts/run.sh
+### ./scripts/launch_container.sh
 ###
 
 ### Base image for your container
@@ -28,9 +28,8 @@ RUN apt update && ACCEPT_EULA=y apt install -y k4a-tools && \
 
 ### Copy source code to container
 COPY src /home/payload/workspace/src
-## COPY include /home/payload/workspace/include
-####COPY scripts /home/payload/workspace/scripts
-####RUN chmod +x /home/payload/workspace/scripts/*.sh
+COPY scripts /home/payload/workspace/scripts
+RUN chmod +x /home/payload/workspace/scripts/*.sh
 
 ### build payload software (if building is required)
 RUN gcc -g -Wall  /home/payload/workspace/src/check-device.cpp -o /usr/local/bin/check-device -lk4a -lstdc++; \
@@ -52,16 +51,7 @@ RUN apt-get update \
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 
-# RUN mkdir -p /home/payload/workspace/build &&\
-#     cd /home/payload/workspace/build &&\
-#     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ../src &&\
-#     make &&\
-#     make install
-
-### Remove build sources
-# RUN rm -rf /home/payload/workspace/build
-
 ### Set payload entrypoint
-####CMD ["/bin/bash", "/home/payload/workspace/scripts/entrypoint.sh"]
+CMD ["/bin/bash", "/home/payload/workspace/scripts/entrypoint.sh"]
 
 # EOF
