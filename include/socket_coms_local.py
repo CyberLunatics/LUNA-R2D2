@@ -9,7 +9,7 @@ import os, os.path
 import threading
 import time
 
-PRINT_PREPEND = '[socket_coms_2.py] '
+PRINT_PREPEND = '[socket_coms_local.py] '
 
 class UNIX_Coms():
 
@@ -49,10 +49,9 @@ class UNIX_Coms():
     def listen(self):
         print(PRINT_PREPEND + 'Listening for connections on {}'.format(self.server_address))
         while (True):
-            data = self.sock.recv(256)
+            data = self.sock.recv(4096)
             if data:
                 # Do something with the data here
-                os.system('capture-disk 5')
                 print(PRINT_PREPEND + 'Received data from {} | DATA [{}]: {}'.format(self.server_address, len(data), data))
 
     '''
@@ -86,16 +85,16 @@ class UNIX_Coms():
 
 
 
+
+
 # base location for payload's UNIX sockets
 UNIX_SOCKETS_BASE_DIR = '/tmp/payload_sockets/'
 # Outgoing socket(s) (sender)
 #   ex: streaming telemetry, store & fwd, reset requests, etc.
-UNIX_ADDR_OUT_1 = UNIX_SOCKETS_BASE_DIR + 'pl_sock_3'
-UNIX_ADDR_OUT_2 = UNIX_SOCKETS_BASE_DIR + 'pl_sock_4'
+UNIX_ADDR_OUT = UNIX_SOCKETS_BASE_DIR + 'pl_sock_out'
 # Incoming socket(s) (listener)
 # ex: commands from ground, data from rover, etc.
-UNIX_ADDR_IN_1 = UNIX_SOCKETS_BASE_DIR + 'pl_sock_1'
-UNIX_ADDR_IN_2 = UNIX_SOCKETS_BASE_DIR + 'pl_sock_2'
+UNIX_ADDR_IN = UNIX_SOCKETS_BASE_DIR + 'pl_sock_in'
 
 
 def main():
@@ -108,8 +107,7 @@ def main():
     # - socket will be created by rover prior to launching paylaod
     try:
         unix_out = {
-            'OUT_1' : UNIX_Coms(UNIX_ADDR_OUT_1),
-            'OUT_2' : UNIX_Coms(UNIX_ADDR_OUT_2),
+            'OUT' : UNIX_Coms(UNIX_ADDR_OUT),
         }
     except:
         print(PRINT_PREPEND + 'Error creating outgoing UNIX socket(s)')
@@ -120,8 +118,7 @@ def main():
     # - socket created by payload application
     try:
         unix_in = {
-            'IN_1'          : UNIX_Coms(UNIX_ADDR_IN_1),
-            'IN_2'          : UNIX_Coms(UNIX_ADDR_IN_2),
+            'IN'          : UNIX_Coms(UNIX_ADDR_IN),
         }
         # FOR EACH: create new sockets, bind to them & starts listening thread
         [unix_in[key].bind_to_socket() for key in unix_in]
@@ -130,17 +127,16 @@ def main():
         unix = None
         _UNIX_UP = False
 
-    # sleep to allow sockets to be created by mirred payload
+    # sleep to allow sockets to be created by mirror script
     time.sleep(1)
 
     # send data to a socket
-    unix_out['OUT_1'].send(bytearray('Hello', 'utf-8'))
-    unix_out['OUT_2'].send(bytearray('Sockets!', 'utf-8'))
+    unix_out['OUT'].send(bytearray('0x001', 'utf-8'))
 
-    # sleep to allow time to receive data from the socket
+    # Sleep to allow data to be received on sockets
     time.sleep(1)
 
-     # close all sockets
+    # close all sockets
     [unix_in[key].close() for key in unix_in]
     [unix_out[key].close() for key in unix_out]
 
