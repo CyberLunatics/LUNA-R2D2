@@ -1,18 +1,18 @@
 #!/usr/bin/python
 
-### * ******************************************* * ###
-### *   Simple threaded Unix socket server        * ###
-### *   running within the payload's container    * ###
-### * ******************************************* * ###
+### * ************************************ * ###
+### *   Simple threaded Unix socket server * ###
+### *   running within the host machine    * ###
+### * ********************** ************* * ###
 import socket
 import os, os.path
 import threading
 import time
 
-PRINT_PREPEND = '[KINECT LUNA] '
+PRINT_PREPEND = '[HOST MACHINE] '
 UNIX_SOCKETS_BASE_DIR = '/tmp/payload_sockets/'
-UNIX_ADDR_OUT = UNIX_SOCKETS_BASE_DIR + 'pl_sock_a'
-UNIX_ADDR_IN = UNIX_SOCKETS_BASE_DIR + 'pl_sock_b'
+UNIX_ADDR_OUT = UNIX_SOCKETS_BASE_DIR + 'pl_sock_b'
+UNIX_ADDR_IN = UNIX_SOCKETS_BASE_DIR + 'pl_sock_a'
 
 class UNIX_Coms():
 
@@ -26,11 +26,13 @@ class UNIX_Coms():
         - Removes existing socket if it exists
     '''
     def bind_to_socket(self):
+
         if os.path.exists(self.server_address):
-            print(self.server_address);
             os.remove(self.server_address)
+
         self.sock.bind(self.server_address)
         print(PRINT_PREPEND + 'starting up on {}'.format(self.server_address))
+
         self.unix_start()
 
     '''
@@ -48,7 +50,6 @@ class UNIX_Coms():
         while (True):
             data = self.sock.recv(4096)
             if data:
-                # Do something with the data here
                 print(PRINT_PREPEND + 'Received data from {} | DATA [{}]: {}'.format(self.server_address, len(data), data))
 
     '''
@@ -57,7 +58,6 @@ class UNIX_Coms():
     '''
     def connect_to_socket(self):
         connect = False
-        #while(connect == False):
         try:
             print(PRINT_PREPEND + 'connecting to {}'.format(self.server_address))
             self.sock.connect(self.server_address)
@@ -80,9 +80,8 @@ class UNIX_Coms():
         self.sock.close()
         print(PRINT_PREPEND + 'Socket closed: {}'.format(self.server_address))
 
-
 def main():
-    
+
     unix_in  = {}
     unix_out = {}
 
@@ -103,6 +102,14 @@ def main():
         print(PRINT_PREPEND + 'Unix sockets not available - continueing without')
         unix = None
         _UNIX_UP = False
+
+    time.sleep(1)
+    while(True):
+        unix_out['OUT'].send(bytearray('0x001', 'utf-8'))
+        time.sleep(3)
+    time.sleep(1)
+
+    print(PRINT_PREPEND + 'Done')
 
     def closeAll():
         [unix_in[key].close() for key in unix_in]
