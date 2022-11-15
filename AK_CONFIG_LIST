@@ -1,9 +1,9 @@
-camera_fps
+camera_fps (-f --fps)
   K4A_FRAMES_PER_SECOND_5
   K4A_FRAMES_PER_SECOND_15
   K4A_FRAMES_PER_SECOND_30
 
-color_format
+color_format (-c --color)
   K4A_IMAGE_FORMAT_COLOR_MJPG
   K4A_IMAGE_FORMAT_COLOR_NV12
   K4A_IMAGE_FORMAT_COLOR_YUY2
@@ -11,7 +11,7 @@ color_format
   K4A_IMAGE_FORMAT_DEPTH16
   K4A_IMAGE_FORMAT_IR16
 
-color_resolution
+color_resolution (-r --resolution)
   K4A_COLOR_RESOLUTION_OFF
   K4A_COLOR_RESOLUTION_720P
   K4A_COLOR_RESOLUTION_1080P
@@ -20,7 +20,7 @@ color_resolution
   K4A_COLOR_RESOLUTION_2160P
   K4A_COLOR_RESOLUTION_3072P
 
-depth_mode
+depth_mode (-d --depth)
   K4A_DEPTH_MODE_OFF
   K4A_DEPTH_MODE_NFOV_2X2BINNED
   K4A_DEPTH_MODE_NFOV_UNBINNED

@@ -218,7 +218,7 @@ def main():
                 repeat = False
                 inpeat = False
                 closeAll()
-                print('\n'+PRINT_PREPEND + 'END: Generating logfile.. \n')
+                print(PRINT_PREPEND + 'END: Generating logfile.. \n')
                 return 0
     return 0
 

@@ -50,7 +50,44 @@ class UNIX_Coms():
             if data:
                 # Do something with the data here
                 print(PRINT_PREPEND + 'Received data from {} | DATA [{}]: {}'.format(self.server_address, len(data), data))
+                cmd = data.decode('utf-8').split('-')
+                print(PRINT_PREPEND + 'Capturing K4A Image with following str: ' + cmd[0] + ' t:' + cmd[1])
+                params = list(cmd[0])
+                fps = params[1]+params[2]
+                color = params[3]+params[4]+params[5]+params[6]
+                resolution = params[7]+params[8]+params[9]+params[10]
+                depth = params[11]
 
+                if fps == '05':
+                    fps='5'
+
+                if color == 'BGRA':
+                    color = 'BGRA32'
+                elif color == 'DP16':
+                    color = 'DEPTH16'
+
+                if resolution == '0000':
+                    resolution = 'OFF'
+                elif resolution == '0720':
+                    resolution = '720P'
+                else:
+                    resolution+='P'
+
+                if depth == '0':
+                    depth = 'OFF'
+                elif depth == '1':
+                    depth = 'NFOV_2X2BINNED'
+                elif depth == '2':
+                    depth = 'NFOV_UNBINNED'
+                elif depth == '3':
+                    depth = 'WFOV_2X2BINNED'
+                elif depth == '4':
+                    depth = 'WFOV_UNBINNED'
+                elif depth == '5':
+                    depth = 'PASSIVE_IR'
+
+                os.system('../src/check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[1]))
+                #print(PRINT_PREPEND+'check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[1]))
     '''
         Connects to existing UNIX sockets
         client (sender) side
