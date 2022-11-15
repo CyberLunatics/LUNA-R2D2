@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-### * ******************************************* * ###
-### *   Simple threaded Unix socket server        * ###
-### *   running within the payload's container    * ###
-### * ******************************************* * ###
+### * **************************************** * ###
+### *   Simple threaded Unix socket server     * ###
+### *   running within the payload's container * ###
+### * **************************************** * ###
 import socket
 import os, os.path
 import threading
@@ -82,7 +82,7 @@ class UNIX_Coms():
 
 
 def main():
-    
+
     unix_in  = {}
     unix_out = {}
 

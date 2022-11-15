@@ -3,7 +3,7 @@
 ### * ************************************ * ###
 ### *   Simple threaded Unix socket server * ###
 ### *   running within the host machine    * ###
-### * ********************** ************* * ###
+### * ************************************ * ###
 import socket
 import os, os.path
 import threading
@@ -85,6 +85,10 @@ def main():
     unix_in  = {}
     unix_out = {}
 
+    def closeAll():
+        [unix_in[key].close() for key in unix_in]
+        [unix_out[key].close() for key in unix_out]
+
     try:
         unix_out = {
             'OUT' : UNIX_Coms(UNIX_ADDR_OUT),
@@ -104,17 +108,118 @@ def main():
         _UNIX_UP = False
 
     time.sleep(1)
-    while(True):
-        unix_out['OUT'].send(bytearray('0x001', 'utf-8'))
-        time.sleep(3)
-    time.sleep(1)
 
-    print(PRINT_PREPEND + 'Done')
+    input_error = "Invalid choice.. using default settings."
+    camera_fps = "K4A_FRAMES_PER_SECOND_5"
+    repeat = True
 
-    def closeAll():
-        [unix_in[key].close() for key in unix_in]
-        [unix_out[key].close() for key in unix_out]
+    while(repeat):
+        input_0 = input("Enter K4A's FPS (0:05 FPS 1:15 FPS 2:30 FPS) # ")
+        if input_0 == str(0):
+            camera_fps = "K4A_FRAMES_PER_SECOND_5"
+        elif input_0 == str(1):
+            camera_fps = "K4A_FRAMES_PER_SECOND_15"
+        elif input_0 == str(2):
+            camera_fps = "K4A_FRAMES_PER_SECOND_30"
+        else:
+            input_0 = 0
+            print(input_error)
 
+        input_1 = input("Enter K4A's Color Format (0:MJPG 1:NV12 2:YUY2 3:BGRA 4:DP16 5:IR16) # ")
+        color_format = "K4A_IMAGE_FORMAT_COLOR_MJPG"
+        if input_1 == str(0):
+            color_format = "K4A_IMAGE_FORMAT_COLOR_MJPG"
+        elif input_1 == str(1):
+            color_format = "K4A_IMAGE_FORMAT_COLOR_NV12"
+        elif input_1 == str(2):
+            color_format = "K4A_IMAGE_FORMAT_COLOR_YUY2"
+        elif input_1 == str(3):
+            color_format = "K4A_IMAGE_FORMAT_COLOR_BGRA32"
+        elif input_1 == str(4):
+            color_format = "K4A_IMAGE_FORMAT_DEPTH16"
+        elif input_1 == str(5):
+            color_format = "K4A_IMAGE_FORMAT_IR16"
+        else:
+            input_1 = 0
+            print(input_error)
+
+        input_2 = input("Enter K4A's Color Resolution (0: Off 1:720 2:1080 3:1440 4:1536 5:2160 6:3072) # ")
+        color_resolution = "K4A_COLOR_RESOLUTION_720P"
+        if input_2 == str(0):
+            color_resolution = "K4A_COLOR_RESOLUTION_OFF"
+        elif input_2 == str(1):
+            color_resolution = "K4A_COLOR_RESOLUTION_720P"
+        elif input_2 == str(2):
+            color_resolution = "K4A_COLOR_RESOLUTION_1080P"
+        elif input_2 == str(3):
+            color_resolution = "K4A_COLOR_RESOLUTION_1440P"
+        elif input_2 == str(4):
+            color_resolution = "K4A_COLOR_RESOLUTION_1536P"
+        elif input_2 == str(5):
+            color_resolution = "K4A_COLOR_RESOLUTION_2160P"
+        elif input_2 == str(6):
+            color_resolution = "K4A_COLOR_RESOLUTION_3072P"
+        else:
+            input_2 = 1
+            print(input_error)
+
+        input_3 = input("Enter K4A's Depth Mode (0: Off 1:NFOV_2X2B 2:NFOV_U 3:WFOV_2X2B 4:WFOV_U 5:P_IR) # ")
+        depth_mode = "K4A_DEPTH_MODE_NFOV_2X2BINNED"
+        if input_3 == str(0):
+            depth_mode = "K4A_DEPTH_MODE_OFF"
+        elif input_3 == str(1):
+            depth_mode = "K4A_DEPTH_MODE_NFOV_2X2BINNED"
+        elif input_3 == str(2):
+            depth_mode = "K4A_DEPTH_MODE_NFOV_UNBINNED"
+        elif input_3 == str(3):
+            depth_mode = "K4A_DEPTH_MODE_WFOV_2X2BINNED"
+        elif input_3 == str(4):
+            depth_mode = "K4A_DEPTH_MODE_WFOV_UNBINNED"
+        elif input_3 == str(5):
+            depth_mode = "K4A_DEPTH_MODE_PASSIVE_IR"
+        else:
+            input_3 = 1
+            print(input_error)
+
+        print("Settings Recorded..\n")
+        print("Capturing K4A Images with the following settings:")
+        print(camera_fps) #1
+        print(color_format) #2
+        print(color_resolution) #3
+        print(depth_mode) #4
+
+        opt = [['05','15','30'], ['MJPG','NV12','YUY2','BGRA','DP16','IR16'], ['0000','0720','1080','1440','1536','2160','3072'], ['0','1','2','3','4','5']]
+
+        cmd = 'K'+opt[0][int(input_0)] + opt[1][int(input_1)] + opt[2][int(input_2)] + opt[3][int(input_3)]
+
+        print('\n'+PRINT_PREPEND + 'K4A Image str: ' + cmd)
+
+        ts = int(time.time())
+        cmd_byte = bytearray(cmd+'-'+str(ts), 'utf-8')
+
+        unix_out['OUT'].send(cmd_byte)
+
+        time.sleep(1)
+        print(PRINT_PREPEND + 'Done.. \n')
+
+        inpeat = True
+        while inpeat:
+            input_r = input('[R] Repeat capture preserving settings \n[N] New capture \n[E] Exit program \nChoice [R, N, E] # ')
+            if input_r == 'R' or input_r == 'r':
+                print('\n'+PRINT_PREPEND + 'K4A Image str: ' + cmd)
+                ts = int(time.time())
+                cmd_byte = bytearray(cmd+'-'+str(ts), 'utf-8')
+                unix_out['OUT'].send(cmd_byte)
+                time.sleep(1)
+                print(PRINT_PREPEND + 'Done.. \n')
+            elif input_r == 'N' or input_r == 'n':
+                inpeat = False
+            elif input_r == 'E' or input_r == 'e':
+                repeat = False
+                inpeat = False
+                closeAll()
+                print('\n'+PRINT_PREPEND + 'END: Generating logfile.. \n')
+                return 0
     return 0
 
 if __name__ == '__main__':
