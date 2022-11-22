@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include "assert.h"
+#include<unistd.h>
 
 long WriteToFile(const char *fileName, void *buffer, size_t bufferSize)
 {
@@ -120,6 +121,8 @@ int main(int argc,char* argv[])
     else if(depth=="PASSIVE_IR")
       config.depth_mode     = K4A_DEPTH_MODE_PASSIVE_IR;
 
+    k4a_device_set_color_control(device, K4A_COLOR_CONTROL_BRIGHTNESS, K4A_COLOR_CONTROL_MODE_MANUAL, 255 );
+
     // Start the camera with the given configuration
     if (K4A_FAILED(k4a_device_start_cameras(device, &config)))
     {
@@ -127,7 +130,7 @@ int main(int argc,char* argv[])
         k4a_device_close(device);
         return 1;
     }
-    int captureFrameCount = 3;
+    int captureFrameCount = 2;
     // Camera capture and application specific code would go here
         while (captureFrameCount-- > 0)
     {
@@ -157,8 +160,10 @@ int main(int argc,char* argv[])
                    k4a_image_get_height_pixels(image),
                    k4a_image_get_width_pixels(image),
                    k4a_image_get_stride_bytes(image));
-                   WriteToFile("color_data. jpeg", k4a_image_get_buffer( image ), k4a_image_get_size(image));
+                   WriteToFile("color_data.jpeg", k4a_image_get_buffer( image ), k4a_image_get_size(image));
             k4a_image_release(image);
+
+            sleep(1);
         }
         else
         {
@@ -174,7 +179,9 @@ int main(int argc,char* argv[])
                    k4a_image_get_width_pixels(image),
                    k4a_image_get_stride_bytes(image));
                    WriteToFile("ir16_data", k4a_image_get_buffer( image ), k4a_image_get_size(image));
+
             k4a_image_release(image);
+            sleep(1);
         }
         else
         {
@@ -190,7 +197,9 @@ int main(int argc,char* argv[])
                    k4a_image_get_width_pixels(image),
                    k4a_image_get_stride_bytes(image));
                    WriteToFile("depth16_data", k4a_image_get_buffer( image ), k4a_image_get_size(image));
+
             k4a_image_release(image);
+            sleep(1);
         }
         else
         {
