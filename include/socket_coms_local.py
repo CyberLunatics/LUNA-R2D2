@@ -48,10 +48,9 @@ class UNIX_Coms():
         while (True):
             data = self.sock.recv(4096)
             if data:
-                # Do something with the data here
                 print(PRINT_PREPEND + 'Received data from {} | DATA [{}]: {}'.format(self.server_address, len(data), data))
                 cmd = data.decode('utf-8').split('-')
-                print(PRINT_PREPEND + 'Capturing K4A Image with following str: ' + cmd[0] + ' t:' + cmd[1])
+
                 params = list(cmd[0])
                 fps = params[1]+params[2]
                 color = params[3]+params[4]+params[5]+params[6]
@@ -86,8 +85,24 @@ class UNIX_Coms():
                 elif depth == '5':
                     depth = 'PASSIVE_IR'
 
-                os.system('../src/check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[1]))
-                #print(PRINT_PREPEND+'check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[1]))
+                print(PRINT_PREPEND + 'K4A Image Capture: ' + cmd[0] + ' t:' + cmd[len(cmd)-1])
+                if(len(cmd)==11):
+                    print(PRINT_PREPEND + 'K4A Color Settings: {} {} {} {} {} {} {} {} {}'.format(cmd[1],cmd[2],cmd[3],cmd[4],cmd[5],cmd[6],cmd[7],cmd[8],cmd[9]))
+                    exposure = cmd[1].split('E')[1]
+                    brightness = cmd[2].split('B')[1]
+                    contrast = cmd[3].split('C')[1]
+                    saturation = cmd[4].split('S')[1]
+                    sharpness = cmd[5].split('H')[1]
+                    gain = cmd[6].split('G')[1]
+                    white_balance = cmd[7].split('W')[1]
+                    blacklight_comp = cmd[8].split('P')[1]
+                    powerline_freq = cmd[9].split('L')[1]
+                    os.system('../src/check-device -f {} -c {} -r {} -d {} -t {} -xp {} -br {} -cn {} -st {} -sh {} -gn {} -wb {} -bl {} -pl {}'.format(fps, color, resolution, depth, cmd[len(cmd)-1], exposure, brightness, contrast, saturation, sharpness, gain, white_balance, blacklight_comp, powerline_freq))
+                    #print(PRINT_PREPEND + 'K4A Color Settings: {} {} {} {} {} {} {} {} {}'.format(exposure, brightness, contrast, saturation, sharpness, gain, white_balance, blacklight_comp, powerline_freq))
+                else:
+                    print(PRINT_PREPEND + 'Loading K4A Default Color Settings..')
+                    os.system('../src/check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[len(cmd)-1]))
+                    #print(PRINT_PREPEND+'check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[1]))
     '''
         Connects to existing UNIX sockets
         client (sender) side

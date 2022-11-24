@@ -181,12 +181,30 @@ def main():
             input_3 = 1
             print(input_error)
 
+        input_4 = input("Set K4A's Color Settings (y/n) #")
+        color_settings = "D"
+
+        if input_4 == "y" or input_4 == "Y":
+            input_4_1 = input("Enter Exposure Time (A, M1-M12, M500-M130000) #")
+            input_4_2 = input("Enter Brightness (0-255) #")
+            input_4_3 = input("Enter Contrast (0-255) #")
+            input_4_4 = input("Enter Saturation (0-255) #")
+            input_4_5 = input("Enter Sharpness (0-255) #")
+            input_4_6 = input("Enter Gain (0-255) #")
+            input_4_7 = input("Enter White Balance (A, M2500-M12500) #")
+            input_4_8 = input("Enter Backlight Compensation (0,1) #")
+            input_4_9 = input("Enter Power Line Compensation (1: 50hz ,2: 60Hz) #")
+
+            color_settings = 'E'+input_4_1+"-"+'B'+input_4_2+"-"+'C'+input_4_3+"-"+'S'+input_4_4+"-"+'H'+input_4_5+"-"+'G'+input_4_6+"-"+'W'+input_4_7+"-"+'P'+input_4_8+"-"+'L'+input_4_9
+
         print("Settings Recorded..\n")
         print("Capturing K4A Images with the following settings:")
-        print(camera_fps) #1
-        print(color_format) #2
-        print(color_resolution) #3
-        print(depth_mode) #4
+
+        print(camera_fps)
+        print(color_format)
+        print(color_resolution)
+        print(depth_mode)
+        print("CS " + color_settings)
 
         opt = [['05','15','30'], ['MJPG','NV12','YUY2','BGRA','DP16','IR16'], ['0000','0720','1080','1440','1536','2160','3072'], ['0','1','2','3','4','5']]
 
@@ -195,7 +213,7 @@ def main():
         print('\n'+PRINT_PREPEND + 'K4A Image str: ' + cmd)
 
         ts = int(time.time())
-        cmd_byte = bytearray(cmd+'-'+str(ts), 'utf-8')
+        cmd_byte = bytearray(cmd+'-'+color_settings+'-'+str(ts), 'utf-8')
 
         unix_out['OUT'].send(cmd_byte)
 

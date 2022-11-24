@@ -27,14 +27,26 @@ long WriteToFile(const char *fileName, void *buffer, size_t bufferSize)
 
 int main(int argc,char* argv[])
 {
-    std::string fps, color, resolution, depth, unix_time;
+    std::string fps, color, resolution, depth, unix_time, exposure, brightness, contrast, saturation, sharpness, gain, white_balance, blacklight_comp, powerline_freq;
     if(argc >= 2){
       fps = argv[2];
       color = argv[4];
       resolution = argv[6];
       depth = argv[8];
       unix_time = argv[10];
-      printf("K4A Image config: \nfps: %s, color: %s, resolution: %s, depth: %s\n", fps.c_str(), color.c_str(), resolution.c_str(), depth.c_str());
+      printf("[AZURE KINECT] K4A Image config: \nfps: %s, color: %s, resolution: %s, depth: %s\n", fps.c_str(), color.c_str(), resolution.c_str(), depth.c_str());
+    }
+    if (argc > 12){
+      exposure = argv[12];
+      brightness = argv[14];
+      contrast = argv[16];
+      saturation = argv[18];
+      sharpness = argv[20];
+      gain = argv[22];
+      white_balance = argv[24];
+      blacklight_comp = argv[26];
+      powerline_freq = argv[28];
+      printf("[AZURE KINECT] K4A Image config: \nfps: %s, color: %s, resolution: %s, depth: %s\n[AZURE KINECT] color settings: exposure: %s, brightness: %s, contrast: %s, saturation: %s, sharpness: %s, gain: %s, white_balance: %s, blacklight_comp: %s, powerline_freq: %s\n", fps.c_str(), color.c_str(), resolution.c_str(), depth.c_str(), exposure.c_str(), brightness.c_str(), contrast.c_str(), saturation.c_str(), sharpness.c_str(), gain.c_str(), white_balance.c_str(), blacklight_comp.c_str(), powerline_freq.c_str());
     }
     uint32_t count = k4a_device_get_installed_count();
     k4a_capture_t capture = NULL;
@@ -43,7 +55,7 @@ int main(int argc,char* argv[])
 
     if (count == 0)
     {
-        printf("\nNo k4a devices attached!\n");
+        printf("\n[AZURE KINECT] No k4a devices attached!\n");
         return 1;
     }
 
@@ -51,7 +63,7 @@ int main(int argc,char* argv[])
     k4a_device_t device = NULL;
     if (K4A_FAILED(k4a_device_open(K4A_DEVICE_DEFAULT, &device)))
     {
-        printf("Failed to open k4a device!\n");
+        printf("[AZURE KINECT] Failed to open k4a device!\n");
         return 1;
     }
 
@@ -62,7 +74,7 @@ int main(int argc,char* argv[])
     // Allocate memory for the serial, then acquire it
     char *serial = (char*)(malloc(serial_size));
     k4a_device_get_serialnum(device, serial, &serial_size);
-    printf("Opened device: %s\n", serial);
+    printf("[AZURE KINECT] Opened device: %s\n", serial);
     free(serial);
 
     // Set cameras default settings
@@ -121,12 +133,20 @@ int main(int argc,char* argv[])
     else if(depth=="PASSIVE_IR")
       config.depth_mode     = K4A_DEPTH_MODE_PASSIVE_IR;
 
-    k4a_device_set_color_control(device, K4A_COLOR_CONTROL_BRIGHTNESS, K4A_COLOR_CONTROL_MODE_MANUAL, 255 );
+
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_EXPOSURE_TIME_ABSOLUTE, K4A_COLOR_CONTROL_MODE_AUTO, 130000 );
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_BRIGHTNESS, K4A_COLOR_CONTROL_MODE_MANUAL, 255 ); 0 - 255
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_CONTRAST, K4A_COLOR_CONTROL_MODE_MANUAL, 255 );
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_SATURATION, K4A_COLOR_CONTROL_MODE_MANUAL, 0 );
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_SHARPNESS, K4A_COLOR_CONTROL_MODE_MANUAL, 255 );
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_WHITEBALANCE, K4A_COLOR_CONTROL_MODE_AUTO, 2500 );
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_BACKLIGHT_COMPENSATION, K4A_COLOR_CONTROL_MODE_MANUAL, 0 );
+    //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_POWERLINE_FREQUENCY, K4A_COLOR_CONTROL_MODE_MANUAL, 1 );
 
     // Start the camera with the given configuration
     if (K4A_FAILED(k4a_device_start_cameras(device, &config)))
     {
-        printf("Failed to start cameras!\n");
+        printf("[AZURE KINECT] Failed to start cameras!\n");
         k4a_device_close(device);
         return 1;
     }
@@ -142,11 +162,11 @@ int main(int argc,char* argv[])
         case K4A_WAIT_RESULT_SUCCEEDED:
             break;
         case K4A_WAIT_RESULT_TIMEOUT:
-            printf("Timed out waiting for a capture\n");
+            printf("[AZURE KINECT] Timed out waiting for a capture\n");
             continue;
             break;
         case K4A_WAIT_RESULT_FAILED:
-            printf("Failed to read a capture\n");
+            printf("[AZURE KINECT] Failed to read a capture\n");
             goto Exit;
         }
 
