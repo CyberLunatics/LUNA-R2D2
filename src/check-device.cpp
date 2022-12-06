@@ -6,13 +6,11 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "assert.h"
-#include<unistd.h>
+#include <unistd.h>
+#include <chrono>
 
 long WriteToFile(const char *fileName, void *buffer, size_t bufferSize)
 {
-    assert(buffer != NULL);
-
     std::ofstream hFile;
     hFile.open(fileName, std::ios::out | std::ios::trunc | std::ios::binary);
     if (hFile.is_open())
@@ -20,8 +18,6 @@ long WriteToFile(const char *fileName, void *buffer, size_t bufferSize)
         hFile.write((char *)buffer, static_cast<std::streamsize>(bufferSize));
         hFile.close();
     }
-    //std::cout << "[Streaming Service] Color frame is stored in " << fileName << std::endl;
-
     return 0;
 }
 
@@ -133,7 +129,6 @@ int main(int argc,char* argv[])
     else if(depth=="PASSIVE_IR")
       config.depth_mode     = K4A_DEPTH_MODE_PASSIVE_IR;
 
-
     //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_EXPOSURE_TIME_ABSOLUTE, K4A_COLOR_CONTROL_MODE_AUTO, 130000 );
     //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_BRIGHTNESS, K4A_COLOR_CONTROL_MODE_MANUAL, 255 ); 0 - 255
     //k4a_device_set_color_control(device, K4A_COLOR_CONTROL_CONTRAST, K4A_COLOR_CONTROL_MODE_MANUAL, 255 );
@@ -150,7 +145,10 @@ int main(int argc,char* argv[])
         k4a_device_close(device);
         return 1;
     }
-    int captureFrameCount = 2;
+    int captureFrameCount = 3;
+    const auto ltt = std::chrono::system_clock::now();
+    int64_t timestamp = std::chrono::duration_cast<std::chrono::seconds>(ltt.time_since_epoch()).count() ;
+
     // Camera capture and application specific code would go here
         while (captureFrameCount-- > 0)
     {
@@ -176,14 +174,14 @@ int main(int argc,char* argv[])
         image = k4a_capture_get_color_image(capture);
         if (image)
         {
+            std::string filename = std::to_string(timestamp) + "C" + fps + color + resolution + ".jpeg";
+
             printf(" | Color res:%4dx%4d stride:%5d ",
                    k4a_image_get_height_pixels(image),
                    k4a_image_get_width_pixels(image),
                    k4a_image_get_stride_bytes(image));
-                   WriteToFile("color_data.jpeg", k4a_image_get_buffer( image ), k4a_image_get_size(image));
+                   WriteToFile(filename.c_str(), k4a_image_get_buffer( image ), k4a_image_get_size(image));
             k4a_image_release(image);
-
-            sleep(1);
         }
         else
         {
@@ -194,14 +192,15 @@ int main(int argc,char* argv[])
         image = k4a_capture_get_ir_image(capture);
         if (image != NULL)
         {
+            std::string filename = std::to_string(timestamp) + "IR" + fps + std::to_string(k4a_image_get_width_pixels(image)) + depth;
+
             printf(" | Ir16 res:%4dx%4d stride:%5d ",
                    k4a_image_get_height_pixels(image),
                    k4a_image_get_width_pixels(image),
                    k4a_image_get_stride_bytes(image));
-                   WriteToFile("ir16_data", k4a_image_get_buffer( image ), k4a_image_get_size(image));
+                   WriteToFile(filename.c_str(), k4a_image_get_buffer( image ), k4a_image_get_size(image));
 
             k4a_image_release(image);
-            sleep(1);
         }
         else
         {
@@ -212,14 +211,15 @@ int main(int argc,char* argv[])
         image = k4a_capture_get_depth_image(capture);
         if (image != NULL)
         {
+            std::string filename = std::to_string(timestamp) + "D" + fps + std::to_string(k4a_image_get_width_pixels(image)) + depth;
+
             printf(" | Depth16 res:%4dx%4d stride:%5d\n",
                    k4a_image_get_height_pixels(image),
                    k4a_image_get_width_pixels(image),
                    k4a_image_get_stride_bytes(image));
-                   WriteToFile("depth16_data", k4a_image_get_buffer( image ), k4a_image_get_size(image));
+                   WriteToFile(filename.c_str(), k4a_image_get_buffer( image ), k4a_image_get_size(image));
 
             k4a_image_release(image);
-            sleep(1);
         }
         else
         {
