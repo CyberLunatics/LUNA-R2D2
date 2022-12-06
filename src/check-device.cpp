@@ -148,6 +148,7 @@ int main(int argc,char* argv[])
     int captureFrameCount = 3;
     const auto ltt = std::chrono::system_clock::now();
     int64_t timestamp = std::chrono::duration_cast<std::chrono::seconds>(ltt.time_since_epoch()).count() ;
+    const char* path = "/tmp/payload_storage/";
 
     // Camera capture and application specific code would go here
         while (captureFrameCount-- > 0)
@@ -174,7 +175,7 @@ int main(int argc,char* argv[])
         image = k4a_capture_get_color_image(capture);
         if (image)
         {
-            std::string filename = std::to_string(timestamp) + "C" + fps + color + resolution + ".jpeg";
+            std::string filename = path + std::to_string(timestamp) + "C" + fps + color + resolution + ".jpeg";
 
             printf(" | Color res:%4dx%4d stride:%5d ",
                    k4a_image_get_height_pixels(image),
@@ -192,7 +193,7 @@ int main(int argc,char* argv[])
         image = k4a_capture_get_ir_image(capture);
         if (image != NULL)
         {
-            std::string filename = std::to_string(timestamp) + "IR" + fps + std::to_string(k4a_image_get_width_pixels(image)) + depth;
+            std::string filename = path + std::to_string(timestamp) + "IR" + fps + std::to_string(k4a_image_get_width_pixels(image)) + depth;
 
             printf(" | Ir16 res:%4dx%4d stride:%5d ",
                    k4a_image_get_height_pixels(image),
@@ -211,7 +212,7 @@ int main(int argc,char* argv[])
         image = k4a_capture_get_depth_image(capture);
         if (image != NULL)
         {
-            std::string filename = std::to_string(timestamp) + "D" + fps + std::to_string(k4a_image_get_width_pixels(image)) + depth;
+            std::string filename = path + std::to_string(timestamp) + "D" + fps + std::to_string(k4a_image_get_width_pixels(image)) + depth;
 
             printf(" | Depth16 res:%4dx%4d stride:%5d\n",
                    k4a_image_get_height_pixels(image),

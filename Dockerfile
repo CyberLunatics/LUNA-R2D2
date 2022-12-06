@@ -28,6 +28,7 @@ RUN apt update && ACCEPT_EULA=y apt install -y k4a-tools && \
 
 ### Copy source code to container
 COPY src /home/payload/workspace/src
+COPY include /home/payload/workspace/include
 COPY scripts /home/payload/workspace/scripts
 RUN chmod +x /home/payload/workspace/scripts/*.sh
 
