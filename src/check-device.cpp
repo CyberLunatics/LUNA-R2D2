@@ -148,7 +148,7 @@ int main(int argc,char* argv[])
     int captureFrameCount = 3;
     const auto ltt = std::chrono::system_clock::now();
     int64_t timestamp = std::chrono::duration_cast<std::chrono::seconds>(ltt.time_since_epoch()).count() ;
-    const char* path = "/tmp/payload_storage/";
+    const char* path = "/storage/";
 
     // Camera capture and application specific code would go here
         while (captureFrameCount-- > 0)

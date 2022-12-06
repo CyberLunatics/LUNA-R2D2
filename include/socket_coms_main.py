@@ -10,7 +10,7 @@ import threading
 import time
 
 PRINT_PREPEND = '[HOST MACHINE] '
-UNIX_SOCKETS_BASE_DIR = '/tmp/payload_sockets/'
+UNIX_SOCKETS_BASE_DIR = '/tmp/payload_sockets/kinect_luna/'
 UNIX_ADDR_OUT = UNIX_SOCKETS_BASE_DIR + 'pl_sock_b'
 UNIX_ADDR_IN = UNIX_SOCKETS_BASE_DIR + 'pl_sock_a'
 
