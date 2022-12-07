@@ -29,7 +29,7 @@ docker build -t payload_image .
 ###### Run payload's Docker container
 ```
 sudo chmod +x ./scripts/launch_container.sh
-sudo ./launch_container.sh payload_container payload_image
+sudo ./scripts/launch_container.sh payload_container payload_image
 ```
 
 ###### Configuration on dev host machine:
