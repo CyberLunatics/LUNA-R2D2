@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Expose the X server on the host.
+# Expose the X server on the host, only needed on dev machine.
 sudo xhost +local:root
 
 export PAYLOAD_STORAGE=/tmp/payload_storage
