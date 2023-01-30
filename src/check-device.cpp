@@ -1,4 +1,3 @@
-#pragma comment(lib, "k4a.lib")
 #include <k4a/k4a.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -145,7 +144,7 @@ int main(int argc,char* argv[]){
     k4a_device_close(device);
     return 1;
   }
-  int captureFrameCount = 3;
+  int captureFrameCount = 30;
   const auto ltt = std::chrono::system_clock::now();
   int64_t timestamp = std::chrono::duration_cast<std::chrono::seconds>(ltt.time_since_epoch()).count() ;
   const char* path = "/storage/";

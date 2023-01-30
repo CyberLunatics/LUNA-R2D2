@@ -34,6 +34,7 @@ RUN chmod +x /home/payload/workspace/scripts/*.sh
 
 ### build payload software (if building is required)
 RUN gcc -g -Wall  /home/payload/workspace/src/check-device.cpp -o /usr/local/bin/check-device -lk4a -lstdc++; \
+    gcc -g -Wall  /home/payload/workspace/src/get-calibration.cpp -o /usr/local/bin/calibrate -lk4a -lstdc++; \
     gcc -g -Wall  /home/payload/workspace/src/capture-stream.c -o /usr/local/bin/capture-stream -lk4a; \
     gcc -g -Wall /home/payload/workspace/src/capture-disk.c -o /usr/local/bin/capture-disk -lk4a
 
