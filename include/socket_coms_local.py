@@ -97,11 +97,11 @@ class UNIX_Coms():
                     white_balance = cmd[7].split('W')[1]
                     blacklight_comp = cmd[8].split('P')[1]
                     powerline_freq = cmd[9].split('L')[1]
-                    os.system('check-device -f {} -c {} -r {} -d {} -t {} -xp {} -br {} -cn {} -st {} -sh {} -gn {} -wb {} -bl {} -pl {};calibrate'.format(fps, color, resolution, depth, cmd[len(cmd)-1], exposure, brightness, contrast, saturation, sharpness, gain, white_balance, blacklight_comp, powerline_freq))
+                    os.system('check-device -f {} -c {} -r {} -d {} -t {} -xp {} -br {} -cn {} -st {} -sh {} -gn {} -wb {} -bl {} -pl {}'.format(fps, color, resolution, depth, cmd[len(cmd)-1], exposure, brightness, contrast, saturation, sharpness, gain, white_balance, blacklight_comp, powerline_freq))
                     #print(PRINT_PREPEND + 'K4A Color Settings: {} {} {} {} {} {} {} {} {}'.format(exposure, brightness, contrast, saturation, sharpness, gain, white_balance, blacklight_comp, powerline_freq))
                 else:
                     print(PRINT_PREPEND + 'Loading K4A Default Color Settings..')
-                    os.system('check-device -f {} -c {} -r {} -d {} -t {};calibrate'.format(fps, color, resolution, depth, cmd[len(cmd)-1]))
+                    os.system('check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[len(cmd)-1]))
                     #print(PRINT_PREPEND+'check-device -f {} -c {} -r {} -d {} -t {}'.format(fps, color, resolution, depth, cmd[1]))
     '''
         Connects to existing UNIX sockets
